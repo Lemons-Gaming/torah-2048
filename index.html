@@ -377,6 +377,7 @@
     document.getElementById('book-name').textContent = book.name;
     document.getElementById('goal-text').textContent = 'המטרה: להגיע אל '+book.parashot[book.parashot.length-1]+' — סיום ספר '+book.name+'.';
     document.getElementById('goal-strip-text').textContent = 'המטרה: להגיע אל '+book.parashot[book.parashot.length-1]+' — סיום ספר '+book.name+'.';
+    document.querySelector('.goal .dot').style.background = book.accent;
     buildLadder();
     loadBest();
     document.getElementById('menu-screen').hidden = true;
@@ -569,6 +570,7 @@
 
   // ---------- flow ----------
   function move(dir){
+    if(!currentBook) return;
     if(inputLocked) return;
     const {moved, justWon} = applyMove(dir);
     if(!moved) return;
