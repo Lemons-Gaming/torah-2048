@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>תורה 2048 · חמשת החומשים</title>
+<title>פרשות השבוע בסגנון 2048</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Heebo:wght@400;500;700;800&family=Suez+One&display=swap" rel="stylesheet">
@@ -44,20 +44,134 @@
 
   .wrap{ width:var(--size); max-width:100%; }
 
-  /* ---------- menu screen ---------- */
-  #menu-screen{max-width:760px;margin:0 auto;padding:8px 4px}
-  .menu-title{font-family:var(--display);font-size:clamp(30px,8vw,46px);text-align:center;margin:6px 0 2px;color:#3a2a16;text-shadow:0 1px 0 rgba(255,255,255,.3)}
-  .menu-title .num{color:#7a5733}
-  .menu-sub{text-align:center;color:var(--ink-soft);margin:0 0 22px;font-size:15px}
-  .menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
-  .bookcard{border-radius:10px;padding:20px 16px;cursor:pointer;color:#fff7ea;border:none;text-align:right;font-family:var(--sans);
-    box-shadow:inset 0 2px 3px rgba(255,255,255,.2), inset 0 -3px 5px rgba(0,0,0,.3), 0 4px 12px rgba(0,0,0,.35);
-    display:flex;flex-direction:column;gap:8px;min-height:140px;justify-content:space-between;transition:transform .12s}
-  .bookcard:hover{transform:translateY(-3px)}
-  .bookcard .bk{font-family:var(--display);font-size:30px;line-height:1}
-  .bookcard .meta{font-size:12.5px;opacity:.92;font-weight:600}
-  .bookcard .go{align-self:flex-start;background:rgba(255,255,255,.92);color:#3a2a16;font-weight:800;font-size:13px;border-radius:7px;padding:6px 14px}
+  /* ---------- menu screen (desert title screen) ---------- */
   [hidden]{display:none !important}
+
+  /* Override body background for menu — body has sandy gradient normally used for game;
+     we want our own sky gradient to fill the viewport. */
+  body:has(#menu-screen:not([hidden])){
+    background:none;
+    padding:0;
+    align-items:stretch;
+  }
+
+  #menu-screen{
+    position:relative;
+    min-height:100dvh;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    /* stepped dusk sky gradient */
+    background:linear-gradient(180deg,#2a2050 0%,#46285c 20%,#864063 38%,#c8682f 56%,#e0a44e 72%,#cf9648 100%);
+  }
+
+  /* stars layer */
+  #ms-stars{position:absolute;inset:0;pointer-events:none;z-index:0;}
+
+  /* sun – top LEFT */
+  #ms-sun{
+    position:absolute;top:12%;left:11%;
+    width:clamp(70px,11vw,110px);height:clamp(70px,11vw,110px);
+    border-radius:50%;
+    background:radial-gradient(circle,#fff1c8 0%,#ffd277 48%,#f4a942 70%,rgba(244,162,58,0) 72%);
+    filter:drop-shadow(0 0 38px rgba(255,190,90,.55));
+    z-index:1;pointer-events:none;
+  }
+
+  /* vignette */
+  #ms-vig{
+    position:absolute;inset:0;
+    background:radial-gradient(125% 90% at 50% 22%, transparent 50%, rgba(20,8,30,.5));
+    z-index:2;pointer-events:none;
+  }
+
+  /* desert scenery SVG */
+  #ms-scenery{
+    position:absolute;left:0;right:0;bottom:0;height:60%;
+    z-index:1;pointer-events:none;
+  }
+
+  /* Lemons Gaming badge – top RIGHT, prominently enlarged */
+  #ms-brand{
+    position:absolute;top:14px;right:14px;z-index:10;
+    display:flex;align-items:center;gap:10px;
+    background:rgba(18,12,8,.60);
+    border:1px solid rgba(233,196,106,.45);
+    border-radius:12px;
+    padding:8px 14px 8px 10px;
+    backdrop-filter:blur(3px);
+  }
+  #ms-brand img{
+    height:88px;width:auto;border-radius:8px;display:block;
+  }
+
+  /* title block – centered */
+  #ms-logo{
+    position:absolute;
+    left:50%;top:50%;
+    transform:translate(-50%,-60%);
+    text-align:center;
+    width:90%;
+    z-index:4;
+    pointer-events:none;
+  }
+  #ms-logo h1{
+    font-family:var(--display);
+    font-size:clamp(28px,7vw,54px);
+    color:#fff3d6;
+    line-height:.95;
+    text-shadow:0 2px 0 #7a3b16,0 4px 0 #5c2a10,0 8px 16px rgba(0,0,0,.5);
+    margin:0;
+  }
+  #ms-logo .ms-sub{
+    margin-top:8px;
+    font-family:var(--display);
+    font-size:clamp(15px,3.4vw,26px);
+    color:#fff0d6;
+    text-shadow:0 2px 4px rgba(0,0,0,.55);
+  }
+  #ms-logo .ms-sub b{color:#ffd23f;}
+
+  /* book shelf */
+  #ms-shelf{
+    position:absolute;
+    left:0;right:0;
+    bottom:5%;
+    z-index:5;
+    display:flex;
+    justify-content:center;
+    align-items:flex-end;
+    gap:1.2%;
+    padding:0 3%;
+    flex-wrap:wrap;
+  }
+  .ms-book{
+    flex:1;
+    min-width:80px;
+    max-width:17%;
+    cursor:pointer;
+    transition:transform .16s ease, filter .16s;
+    text-align:center;
+    filter:drop-shadow(0 9px 12px rgba(0,0,0,.5));
+    border:none;background:transparent;padding:0;
+  }
+  .ms-book:hover{transform:translateY(-10px) rotate(-1deg);filter:drop-shadow(0 15px 16px rgba(0,0,0,.55)) brightness(1.08);}
+  .ms-book:focus-visible{outline:3px solid #ffd23f;outline-offset:3px;border-radius:4px;}
+  .ms-book svg{width:100%;height:auto;display:block;}
+  .ms-book .ms-bk{
+    font-family:var(--display);
+    font-size:clamp(12px,2.4vw,20px);
+    color:#fff3d6;
+    text-shadow:0 2px 3px rgba(0,0,0,.6);
+    margin-top:6px;
+  }
+  .ms-book .ms-n{
+    font-weight:800;
+    font-size:clamp(9px,1.5vw,12px);
+    color:#f0d29a;
+    text-shadow:0 1px 2px rgba(0,0,0,.5);
+    margin-top:1px;
+  }
 
   /* ---------- header ---------- */
   header{
@@ -243,13 +357,22 @@
 </head>
 <body>
 
-  <!-- MENU SCREEN -->
+  <!-- MENU SCREEN — desert title screen -->
   <div id="menu-screen">
-    <div class="menu-wrap">
-      <h1 class="menu-title">תורה <span class="num">2048</span></h1>
-      <p class="menu-sub">בחרו חומש — אחדו פרשות זהות והתקדמו עד הפרשה האחרונה</p>
-      <div class="menu" id="menu"></div>
-    </div>
+    <!-- stars -->
+    <div id="ms-stars"></div>
+    <!-- sun (top-left) -->
+    <div id="ms-sun"></div>
+    <!-- desert scenery SVG (dunes, camels, palms, ripples) -->
+    <svg id="ms-scenery" viewBox="0 0 980 372" preserveAspectRatio="none"></svg>
+    <!-- vignette -->
+    <div id="ms-vig"></div>
+    <!-- Lemons Gaming logo badge (top-right) -->
+    <div id="ms-brand"><img src="lemons-logo.jpg" alt="Lemons Gaming"></div>
+    <!-- title -->
+    <div id="ms-logo"><h1>פרשות השבוע</h1><div class="ms-sub">בסגנון <b>2048</b></div></div>
+    <!-- book shelf (populated by JS) -->
+    <div id="ms-shelf"></div>
   </div>
 
   <!-- GAME SCREEN -->
@@ -395,17 +518,97 @@
     document.getElementById('menu-screen').hidden = false;
   }
 
-  // ---------- render menu ----------
+  // ---------- aged/faded menu-only book colors (DOES NOT touch BOOKS[i].ramp or .accent) ----------
+  const MENU_AGED = {
+    genesis:   '#7d8a52',  // dusty olive-green
+    exodus:    '#5c7a91',  // faded slate-blue
+    leviticus: '#a85a44',  // faded brick-red
+    numbers:   '#b0894e',  // aged ochre
+    deut:      '#856086',  // dusty plum
+  };
+
+  // shade helper for SVG gradients
+  function menuShade(hex,amt){
+    const cl=v=>Math.max(0,Math.min(255,Math.round(v)));
+    const r=parseInt(hex.slice(1,3),16)+amt, g=parseInt(hex.slice(3,5),16)+amt, b=parseInt(hex.slice(5,7),16)+amt;
+    return '#'+[cl(r),cl(g),cl(b)].map(v=>v.toString(16).padStart(2,'0')).join('');
+  }
+
+  function bookSVG(c, idx){
+    const light=menuShade(c,22), dark=menuShade(c,-30), spine=menuShade(c,-52);
+    const gold='#c2a25c', goldL='#d8bd7c', page='#e7dcc0', pageSh='#c9bb95';
+    return `<svg viewBox="0 0 120 156" aria-hidden="true">
+      <defs><linearGradient id="mscov${idx}" x1="0" y1="0" x2="0.85" y2="1">
+        <stop offset="0" stop-color="${light}"/><stop offset="1" stop-color="${dark}"/></linearGradient></defs>
+      <ellipse cx="58" cy="150" rx="46" ry="6.5" fill="rgba(0,0,0,.30)"/>
+      <rect x="16" y="16" width="80" height="126" rx="3" fill="${page}"/>
+      <g stroke="${pageSh}" stroke-width="1.3">
+        <line x1="18" y1="30" x2="22" y2="30"/><line x1="18" y1="48" x2="22" y2="48"/><line x1="18" y1="66" x2="22" y2="66"/>
+        <line x1="18" y1="84" x2="22" y2="84"/><line x1="18" y1="102" x2="22" y2="102"/><line x1="18" y1="120" x2="22" y2="120"/></g>
+      <path d="M40 8 L52 8 L52 34 L46 28 L40 34 Z" fill="${gold}"/>
+      <rect x="22" y="10" width="74" height="132" rx="6" fill="url(#mscov${idx})" stroke="${spine}" stroke-width="2"/>
+      <rect x="24" y="104" width="70" height="36" rx="5" fill="rgba(0,0,0,.14)"/>
+      <rect x="27" y="14" width="8" height="124" rx="4" fill="rgba(255,255,255,.10)"/>
+      <circle cx="46" cy="120" r="6" fill="rgba(0,0,0,.07)"/><circle cx="70" cy="40" r="5" fill="rgba(255,255,255,.06)"/>
+      <rect x="88" y="10" width="11" height="132" rx="3" fill="${spine}"/>
+      <g stroke="${gold}" stroke-width="2" opacity=".8">
+        <line x1="89" y1="34" x2="99" y2="34"/><line x1="89" y1="76" x2="99" y2="76"/><line x1="89" y1="118" x2="99" y2="118"/></g>
+      <rect x="32" y="24" width="50" height="104" rx="4" fill="none" stroke="${gold}" stroke-width="1.6" opacity=".8"/>
+      <circle cx="57" cy="76" r="15" fill="none" stroke="${goldL}" stroke-width="1.6" opacity=".85"/>
+      <path d="M57 64 L67 76 L57 88 L47 76 Z" fill="${gold}" opacity=".9"/>
+    </svg>`;
+  }
+
+  // ---------- render desert title screen ----------
   (function renderMenu(){
-    const menu = document.getElementById('menu');
-    BOOKS.forEach(b=>{
-      const card=document.createElement('button');
-      card.className='bookcard'; card.style.background=b.accent;
-      card.innerHTML='<div class="bk">'+b.name+'</div>'+
-        '<div class="meta">'+b.parashot.length+' פרשות · מ'+b.parashot[0]+' עד '+b.parashot[b.parashot.length-1]+'</div>'+
-        '<div class="go">שחק ▸</div>';
-      card.addEventListener('click', ()=>startBook(b));
-      menu.appendChild(card);
+    // --- stars ---
+    let s='';
+    for(let i=0;i<48;i++){
+      const x=(i*73+((i*i)%37)*5+9)%980, y=(i*29+((i*i*i)%23)*2+4)%150, r=(i%6===0)?1.8:1;
+      s+=`<circle cx="${x}" cy="${y}" r="${r}" fill="#fff" opacity="${(0.4+(i%6)/10).toFixed(2)}"/>`;
+    }
+    document.getElementById('ms-stars').innerHTML=
+      `<svg width="100%" height="100%" viewBox="0 0 980 620" preserveAspectRatio="none">${s}</svg>`;
+
+    // --- desert scenery SVG ---
+    const SC=[];
+    const sand1='#c79a5a', sand2='#a9763f', sand3='#86592e', sand4='#5e3d22', darkSil='#3c2614';
+    SC.push(`<path d="M0 120 Q200 64 440 104 T980 84 V372 H0 Z" fill="${sand1}"/>`);
+    SC.push(`<path d="M0 180 Q260 120 560 164 T980 150 V372 H0 Z" fill="${sand2}"/>`);
+    SC.push(`<path d="M0 250 Q240 200 540 232 T980 224 V372 H0 Z" fill="${sand3}"/>`);
+    SC.push(`<path d="M0 320 Q300 290 620 312 T980 306 V372 H0 Z" fill="${sand4}"/>`);
+    SC.push(`<g stroke="rgba(60,38,20,.25)" stroke-width="2" fill="none" stroke-linecap="round">
+      <path d="M120 210 q60 -10 120 0"/><path d="M360 230 q70 -12 150 2"/><path d="M640 222 q60 -10 130 0"/>
+      <path d="M200 280 q80 -12 160 2"/><path d="M520 290 q70 -10 150 0"/></g>`);
+    function camel(x,y,sc){return `<g transform="translate(${x},${y}) scale(${sc})" fill="${darkSil}">
+      <ellipse cx="16" cy="10" rx="13" ry="6"/><ellipse cx="11" cy="5" rx="5" ry="5"/><ellipse cx="20" cy="5" rx="5" ry="5"/>
+      <path d="M27 9 q6 -2 7 -10 l2 1 q0 9 -6 13 Z"/><circle cx="35" cy="-2" r="3"/>
+      <rect x="7" y="14" width="2.4" height="11"/><rect x="13" y="14" width="2.4" height="11"/>
+      <rect x="20" y="14" width="2.4" height="11"/><rect x="26" y="14" width="2.4" height="11"/></g>`;}
+    SC.push(`<g opacity=".85">${camel(620,196,0.9)}${camel(672,200,0.78)}${camel(716,203,0.62)}</g>`);
+    function palm(x,baseY,sc){return `<g transform="translate(${x},${baseY}) scale(${sc})" fill="${darkSil}">
+      <path d="M-3 0 q-2 -34 4 -64 q2 30 4 64 Z"/>
+      <g transform="translate(2,-62)">
+        <path d="M0 0 q-34 -6 -52 8 q26 -22 52 -2 Z"/><path d="M0 0 q34 -6 52 8 q-26 -22 -52 -2 Z"/>
+        <path d="M0 0 q-22 -26 -44 -28 q24 -2 44 22 Z"/><path d="M0 0 q22 -26 44 -28 q-24 -2 -44 22 Z"/>
+        <path d="M0 0 q-6 -34 4 -50 q4 26 -4 50 Z"/></g></g>`;}
+    SC.push(palm(168,300,1.05));
+    SC.push(palm(95,316,0.7));
+    document.getElementById('ms-scenery').innerHTML = SC.join('');
+
+    // --- book shelf wired to startBook ---
+    const shelf = document.getElementById('ms-shelf');
+    BOOKS.forEach((b, i)=>{
+      const aged = MENU_AGED[b.id] || b.accent;
+      const btn = document.createElement('button');
+      btn.className = 'ms-book';
+      btn.setAttribute('aria-label', 'שחק ב' + b.name);
+      btn.innerHTML =
+        bookSVG(aged, i) +
+        '<div class="ms-bk">' + b.name + '</div>' +
+        '<div class="ms-n">' + b.parashot.length + ' פרשות</div>';
+      btn.addEventListener('click', ()=>startBook(BOOKS[i]));
+      shelf.appendChild(btn);
     });
   })();
 
