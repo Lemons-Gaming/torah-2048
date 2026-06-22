@@ -6,19 +6,19 @@
 <title>תורה 2048 · חמשת החומשים</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Heebo:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Heebo:wght@400;500;700;800&family=Suez+One&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='6' width='52' height='52' rx='10' fill='%23c4632e' stroke='%233a2a16' stroke-width='4'/%3E%3Ctext x='32' y='44' font-size='34' text-anchor='middle' fill='%23f4cd7e' font-family='serif' font-weight='bold'%3E%D7%90%3C/text%3E%3C/svg%3E">
 <style>
   :root{
     --serif: 'Frank Ruhl Libre', 'David Libre', 'Times New Roman', serif;
+    --display: 'Suez One', 'Frank Ruhl Libre', 'David Libre', serif;
     --sans: 'Heebo', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
-    --parchment-1:#f6efe0;
-    --parchment-2:#ece0c6;
-    --ink:#3a3120;
-    --ink-soft:#7c6c4c;
-    --board-bg:#bda983;
-    --well:#cdbb93;
-    --line:rgba(58,49,32,.14);
+    --ink:#3a2a16;
+    --ink-soft:#5a4326;
+    --board-bg:#8a653c;
+    --well:#9c7448;
+    --line:rgba(58,40,12,.18);
 
     --size: min(92vw, 460px);
     --gap: clamp(8px, 2.6vw, 14px);
@@ -33,8 +33,7 @@
     font-family:var(--sans);
     color:var(--ink);
     min-height:100dvh;
-    background:
-      radial-gradient(120% 90% at 50% -10%, #fbf6ea 0%, var(--parchment-1) 38%, var(--parchment-2) 100%);
+    background: linear-gradient(180deg,#d9b88a,#b98e5e 60%,#9c6f43);
     display:flex;
     flex-direction:column;
     align-items:center;
@@ -47,17 +46,17 @@
 
   /* ---------- menu screen ---------- */
   #menu-screen{max-width:760px;margin:0 auto;padding:8px 4px}
-  .menu-title{font-family:var(--serif);font-weight:900;font-size:clamp(30px,8vw,46px);text-align:center;margin:6px 0 2px}
-  .menu-title .num{color:#b07a36}
+  .menu-title{font-family:var(--display);font-size:clamp(30px,8vw,46px);text-align:center;margin:6px 0 2px;color:#3a2a16;text-shadow:0 1px 0 rgba(255,255,255,.3)}
+  .menu-title .num{color:#7a5733}
   .menu-sub{text-align:center;color:var(--ink-soft);margin:0 0 22px;font-size:15px}
   .menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
-  .bookcard{border-radius:16px;padding:20px 16px;cursor:pointer;color:#fff7ea;border:none;text-align:right;font-family:var(--sans);
-    box-shadow:0 12px 26px -16px rgba(58,40,12,.6), inset 0 1px 0 rgba(255,255,255,.18);
+  .bookcard{border-radius:10px;padding:20px 16px;cursor:pointer;color:#fff7ea;border:none;text-align:right;font-family:var(--sans);
+    box-shadow:inset 0 2px 3px rgba(255,255,255,.2), inset 0 -3px 5px rgba(0,0,0,.3), 0 4px 12px rgba(0,0,0,.35);
     display:flex;flex-direction:column;gap:8px;min-height:140px;justify-content:space-between;transition:transform .12s}
   .bookcard:hover{transform:translateY(-3px)}
-  .bookcard .bk{font-family:var(--serif);font-weight:900;font-size:30px;line-height:1}
+  .bookcard .bk{font-family:var(--display);font-size:30px;line-height:1}
   .bookcard .meta{font-size:12.5px;opacity:.92;font-weight:600}
-  .bookcard .go{align-self:flex-start;background:rgba(255,255,255,.92);color:#3a3120;font-weight:800;font-size:13px;border-radius:9px;padding:6px 14px}
+  .bookcard .go{align-self:flex-start;background:rgba(255,255,255,.92);color:#3a2a16;font-weight:800;font-size:13px;border-radius:7px;padding:6px 14px}
   [hidden]{display:none !important}
 
   /* ---------- header ---------- */
@@ -69,14 +68,15 @@
     margin-bottom:14px;
   }
   .title h1{
-    font-family:var(--serif);
-    font-weight:900;
+    font-family:var(--display);
     font-size:clamp(30px,9vw,44px);
     line-height:.95;
     margin:0;
     letter-spacing:.5px;
+    color:#3a2a16;
+    text-shadow:0 1px 0 rgba(255,255,255,.3);
   }
-  .title .num{ color:#b07a36; }
+  .title .num{ color:#7a5733; }
   .title p{
     margin:6px 2px 0;
     font-size:clamp(12px,3.4vw,14px);
@@ -87,30 +87,31 @@
   .scores{ display:flex; flex-direction:column; align-items:stretch; gap:8px; }
   .score-row{ display:flex; gap:8px; }
   .box{
-    background:var(--board-bg);
-    color:#fff7ea;
+    background:#7a5733;
+    color:#fbe6cf;
     border-radius:10px;
     padding:7px 14px;
     text-align:center;
     min-width:72px;
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.12);
+    box-shadow:inset 0 2px 3px rgba(255,255,255,.15), inset 0 -2px 4px rgba(0,0,0,.3);
   }
   .box .lbl{
     font-size:10px; font-weight:700; letter-spacing:1px;
-    text-transform:uppercase; color:#f2e6cd; opacity:.85;
+    text-transform:uppercase; color:#fbe6cf; opacity:.85;
   }
   .box .val{ font-size:20px; font-weight:800; font-variant-numeric:tabular-nums; }
   .btn{
     font-family:var(--sans);
     font-weight:700;
     font-size:14px;
-    color:#fff7ea;
-    background:#9c6b34;
+    color:#fbe6cf;
+    background:#7a5733;
     border:none;
     border-radius:10px;
     padding:9px 12px;
     cursor:pointer;
     transition:filter .15s, transform .05s;
+    box-shadow:inset 0 2px 3px rgba(255,255,255,.15), inset 0 -2px 4px rgba(0,0,0,.3);
   }
   .btn:hover{ filter:brightness(1.07); }
   .btn:active{ transform:translateY(1px); }
@@ -119,10 +120,10 @@
   /* ---------- goal strip ---------- */
   .goal{
     display:flex; align-items:center; gap:8px;
-    font-size:13px; color:var(--ink-soft);
+    font-size:13px; color:#5a4326;
     margin:0 2px 12px; font-weight:500;
   }
-  .goal b{ color:var(--ink); font-weight:700; }
+  .goal b{ color:#3a2a16; font-weight:700; }
   .goal .dot{ width:13px; height:13px; border-radius:4px;
     background:#23264e; box-shadow:0 0 0 2px rgba(244,205,126,.6); display:inline-block; }
 
@@ -131,12 +132,12 @@
     position:relative;
     width:var(--size);
     height:var(--size);
-    background:var(--board-bg);
+    background:#8a653c;
     border-radius:16px;
     padding:var(--gap);
     box-shadow:
       0 18px 40px -20px rgba(58,40,12,.55),
-      inset 0 2px 4px rgba(255,255,255,.18);
+      inset 0 3px 12px rgba(0,0,0,.45);
     touch-action:none;
     direction:ltr; /* keep grid math LTR; tile text stays Hebrew */
     user-select:none;
@@ -148,23 +149,23 @@
     grid-template-rows:repeat(4,1fr);
     gap:var(--gap);
   }
-  .cell{ background:var(--well); border-radius:11px; box-shadow:inset 0 1px 3px rgba(58,40,12,.18); }
+  .cell{ background:#9c7448; border-radius:11px; box-shadow:inset 0 2px 5px rgba(0,0,0,.35); }
 
   .tile{
     position:absolute;
     top:var(--gap); left:var(--gap);
     width:var(--cell); height:var(--cell);
-    border-radius:11px;
+    border-radius:6px;
     display:flex; align-items:center; justify-content:center;
     font-family:var(--serif);
-    font-weight:700;
+    font-weight:900;
     line-height:1;
     text-align:center;
     white-space:nowrap;
     padding:2px;
     transition:transform var(--slide) cubic-bezier(.3,.8,.4,1);
     will-change:transform;
-    box-shadow:0 4px 10px -5px rgba(40,25,5,.5), inset 0 1px 0 rgba(255,255,255,.18);
+    box-shadow:inset 0 2px 3px rgba(255,255,255,.25), inset 0 -3px 5px rgba(0,0,0,.35), 0 2px 4px rgba(0,0,0,.3);
     direction:rtl;
   }
   .tile.glow{
@@ -188,7 +189,7 @@
     margin:18px 2px 8px;
   }
   .ladder-head h2{
-    font-family:var(--serif); font-weight:700; font-size:16px; margin:0; color:var(--ink);
+    font-family:var(--display); font-size:16px; margin:0; color:#3a2a16;
   }
   .ladder-head span{ font-size:11.5px; color:var(--ink-soft); }
   .ladder{
@@ -219,18 +220,19 @@
     gap:14px;
     border-radius:16px;
     backdrop-filter:blur(2px);
-    background:rgba(246,239,224,.86);
+    background:rgba(154,111,67,.92);
+    color:#fbe6cf;
     text-align:center; padding:24px;
     direction:rtl;
     animation:fade .25s ease;
   }
   .overlay.show{ display:flex; }
-  .overlay.win{ background:rgba(35,38,78,.9); color:#f6efe0; }
-  .overlay h3{ font-family:var(--serif); font-weight:900; font-size:30px; margin:0; }
+  .overlay.win{ background:rgba(58,42,22,.93); color:#fbe6cf; }
+  .overlay h3{ font-family:var(--display); font-size:30px; margin:0; color:#fbe6cf; }
   .overlay.win h3{ color:#f4cd7e; }
   .overlay p{ margin:0; font-size:14px; max-width:80%; opacity:.9; }
   .overlay .row{ display:flex; gap:10px; }
-  .overlay.win .btn{ background:#caa256; color:#23264e; }
+  .overlay.win .btn{ background:#caa256; color:#3a2a16; }
   @keyframes fade{ from{ opacity:0; } to{ opacity:1; } }
 
   @media (prefers-reduced-motion: reduce){
@@ -312,16 +314,20 @@
 
   // ---------- books data ----------
   const BOOKS = [
-    { id:'genesis', name:'בראשית', accent:'#2f6b46', start:'#e7e6c8', end:'#173b29',
+    { id:'genesis', name:'בראשית', accent:'#28ad5e',
+      ramp:['#f0eaa8','#d2e07a','#a6d44f','#5fc04a','#28ad5e','#119b7a','#0e8a86','#0d7480','#125f72','#184a5e','#1d3848','#11242e'],
       parashot:['בראשית','נח','לך לך','וירא','חיי שרה','תולדות','ויצא','וישלח','וישב','מקץ','ויגש','ויחי'] },
-    { id:'exodus', name:'שמות', accent:'#2b6f88', start:'#dde9e6', end:'#13314a',
+    { id:'exodus', name:'שמות', accent:'#1769bf',
+      ramp:['#d9ecf2','#aad9ec','#6ec3e6','#3aa6de','#1f86cf','#1769bf','#1450a6','#143f88','#15316a','#172650','#121a38'],
       parashot:['שמות','וארא','בא','בשלח','יתרו','משפטים','תרומה','תצוה','כי תשא','ויקהל','פקודי'] },
-    { id:'leviticus', name:'ויקרא', accent:'#a23d3f', start:'#eedcc8', end:'#5c1c22',
+    { id:'leviticus', name:'ויקרא', accent:'#dd5a26',
+      ramp:['#f6e7a8','#f4cd6a','#efa83f','#e8822c','#dd5a26','#cc3a2a','#b32432','#971a3a','#741533','#4d0f24'],
       parashot:['ויקרא','צו','שמיני','תזריע','מצורע','אחרי מות','קדושים','אמור','בהר','בחקתי'] },
-    { id:'numbers', name:'במדבר', accent:'#9c6b34',
-      ramp:['#e9ddc4','#e1c995','#dcab66','#d28a4a','#c06f3e','#a9543f','#8f4350','#6f3c63','#403a6b','#23264e'],
+    { id:'numbers', name:'במדבר', accent:'#c4632e',
+      ramp:['#ecd9a0','#e0b95e','#d18f3a','#c4632e','#a83f3e','#823a63','#5a3a7e','#3b3470','#272a55','#171b38'],
       parashot:['במדבר','נשא','בהעלותך','שלח','קרח','חקת','בלק','פינחס','מטות','מסעי'] },
-    { id:'deut', name:'דברים', accent:'#5a3f7a', start:'#e4dbe8', end:'#2c2047',
+    { id:'deut', name:'דברים', accent:'#9536b3',
+      ramp:['#ead9f0','#d3a9e6','#bd7ddb','#a854c9','#9536b3','#7e2a9c','#662586','#4f1f6e','#3a1a54','#27143b','#180c27'],
       parashot:['דברים','ואתחנן','עקב','ראה','שופטים','כי תצא','כי תבוא','נצבים','וילך','האזינו','וזאת הברכה'] },
   ];
 
@@ -330,8 +336,8 @@
   function rgb2hex(a){return '#'+a.map(x=>Math.round(x).toString(16).padStart(2,'0')).join('');}
   function rampColors(start,end,n){const A=hex2rgb(start),B=hex2rgb(end),o=[];for(let i=0;i<n;i++){const t=n<=1?0:i/(n-1);o.push(rgb2hex([A[0]+(B[0]-A[0])*t,A[1]+(B[1]-A[1])*t,A[2]+(B[2]-A[2])*t]));}return o;}
   function luminance(hex){const [r,g,b]=hex2rgb(hex);return (0.299*r+0.587*g+0.114*b)/255;}
-  function fgFor(bg,isDest){return isDest?'#f4cd7e':(luminance(bg)<0.55?'#fff7ea':'#4a3414');}
-  function bookColors(book){return book.ramp?book.ramp:rampColors(book.start,book.end,book.parashot.length);}
+  function fgFor(bg,isDest){return isDest?'#f4cd7e':(luminance(bg)<0.56?'#fff':'#2a2410');}
+  function bookColors(book){return book.ramp;}
 
   // ---------- module-level engine state (set per book by startBook) ----------
   let ORDER, NAME, COLORS, MAX;
