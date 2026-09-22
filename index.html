@@ -558,6 +558,7 @@
   }
 
   function backToMenu(){
+    reportEnd('quit');
     document.getElementById('game-screen').hidden = true;
     document.getElementById('menu-screen').hidden = false;
   }
@@ -839,11 +840,50 @@
       removedTiles = removedTiles.filter(t=>!settle.includes(t));
     }, 170);
 
-    if(justWon && !wonShown){ wonShown=true; inputLocked=true; overlayWin.classList.add('show'); }
-    else if(!movesAvailable()){ inputLocked=true; overlayLose.classList.add('show'); }
+    if(justWon && !wonShown){ wonShown=true; inputLocked=true; overlayWin.classList.add('show'); reportEnd('won'); }
+    else if(!movesAvailable()){ inputLocked=true; overlayLose.classList.add('show'); reportEnd('lost'); }
   }
 
+  // ---------- מדידה (GA4) ----------
+  // סכמת האירועים זהה לשאר המשחקים: game_start / game_end עם
+  // game_name, outcome, score, stage_reached, time_played_seconds.
+  let roundT0 = 0;
+  let endSent = true;            // true עד שמתחיל סיבוב אמיתי
+
+  function highestParasha(){     // הפרשה הגבוהה ביותר שהושגה, כמספר סידורי
+    let top = 0;
+    for(const t of (allTiles||[])) if(t.value > top) top = t.value;
+    const i = ORDER.indexOf(top);
+    return i < 0 ? 0 : i + 1;
+  }
+
+  function reportStart(){
+    roundT0 = Date.now(); endSent = false;
+    if(typeof gtag !== 'function') return;
+    gtag('event', 'game_start', {
+      game_name: window.GAME_NAME,
+      book: currentBook ? currentBook.name : ''
+    });
+  }
+
+  function reportEnd(outcome){   // outcome: won | lost | quit
+    if(endSent || !currentBook) return;
+    endSent = true;
+    if(typeof gtag !== 'function') return;
+    gtag('event', 'game_end', {
+      game_name: window.GAME_NAME,
+      book: currentBook.name,
+      outcome: outcome,
+      score: score,
+      stage_reached: highestParasha(),
+      time_played_seconds: Math.round((Date.now() - roundT0) / 1000)
+    });
+  }
+
+  window.addEventListener('pagehide', ()=> reportEnd('quit'));
+
   function reset(){
+    reportEnd('quit');   // סיבוב קודם שננטש (״משחק חדש״ באמצע) — לפני איפוס הניקוד
     grid = [[null,null,null,null],[null,null,null,null],[null,null,null,null],[null,null,null,null]];
     allTiles=[]; removedTiles=[];
     for(const id in tileEls){ tileEls[id].remove(); delete tileEls[id]; }
@@ -853,6 +893,7 @@
     overlayLose.classList.remove('show');
     spawn(); spawn();
     render();
+    reportStart();
   }
 
   // ---------- input: keyboard ----------
